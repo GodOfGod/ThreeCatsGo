@@ -3,7 +3,6 @@ package main
 import (
 	api "ThreeCatsGo/api"
 	middleware "ThreeCatsGo/middle_ware"
-	"ThreeCatsGo/tools"
 
 	"github.com/gin-gonic/gin"
 
@@ -11,7 +10,7 @@ import (
 )
 
 func main() {
-	tools.CreateFolder()
+	// tools.CreateFolder()
 	// create a router
 	router := gin.Default()
 	router.Use(middleware.VerifyToken())
@@ -20,5 +19,6 @@ func main() {
 	db := dbCon.ConnectDB()
 	api.HandleRouter(router, db)
 	// monitor the default port
-	router.Run("localhost:8080")
+	// router.Run("localhost:443")
+	router.RunTLS("47.122.29.197:80", "cert.pem", "cert.key")
 }
