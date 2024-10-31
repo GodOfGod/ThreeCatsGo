@@ -17,9 +17,14 @@ type PetInfo struct {
 	Pet_id      string `json:"pet_id"`
 }
 
-func ConnectDB() *sql.DB {
-	db, err := sql.Open("mysql", "root:0604064Li;@(172.16.2.91:3306)/THREE_CATS")
-
+func ConnectDB(env string) *sql.DB {
+	var db *sql.DB
+	var err error
+	if env == "dev" {
+		db, err = sql.Open("mysql", "root:admin2004@(localhost:3306)/THREE_CATS")
+	} else if env == "prod" {
+		db, err = sql.Open("mysql", "root:0604064Li;@(172.16.2.91:3306)/THREE_CATS")
+	}
 	if err != nil {
 		panic(err)
 	}

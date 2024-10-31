@@ -33,6 +33,7 @@ func HandleRouter(router *gin.Engine, db *sql.DB) {
 	router.GET("/get_file_by_id", ApiGetFileById(db))
 	router.GET("/operate_event", ApiEventOperate(db))
 	router.GET("/get_event_by_range", ApiGetEventByRange(db))
+	router.GET("/download_file_by_id", ApiDownloadFileById(db))
 }
 
 func getEventListByUserId(ctx *gin.Context) {
@@ -232,7 +233,7 @@ func ApiAddEventFile(db *sql.DB) func(ctx *gin.Context) {
 		ctx.SaveUploadedFile(file, saveFilePath)
 		fileInfo := model.FileInfo{
 			Id:       tools.GenerateId().String(),
-			FilePath: "http://localhost:8080/" + config.EVENT_FILE_SOURCE + "/" + file.Filename,
+			FilePath: saveFilePath,
 			FileName: fileName,
 			PetId:    petId,
 			EventId:  eventId,
@@ -328,5 +329,17 @@ func ApiGetEventByRange(db *sql.DB) func(ctx *gin.Context) {
 		event_list := DB.GetEventByRange(db, userId.(string), begin_time, end_time)
 		ctx.JSON(http.StatusOK, gin.H{"data": event_list})
 
+	}
+}
+
+func ApiDownloadFileById(db *sql.DB) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		file_id, _ := ctx.GetQuery("file_id")
+		fileList := DB.GetFileById(db, file_id)
+		ctx.Header("Content-Type", "application/octet-stream")
+		ctx.Header("Content-Disposition", "attachment; filename="+fileList[0].FileName)
+		ctx.Header("Content-Transfer-Encoding", "binary")
+		fmt.Println(fileList[0].FilePath)
+		ctx.File(fileList[0].FilePath)
 	}
 }
