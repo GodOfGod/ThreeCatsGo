@@ -15,6 +15,7 @@ import (
 
 func main() {
 	var env *string = flag.String("env", "dev", "current env, dev or prod")
+	flag.Parse()
 
 	router := gin.Default()
 
@@ -26,7 +27,6 @@ func main() {
 
 	api.HandleRouter(router, db)
 
-	flag.Parse()
 	if *env == "dev" {
 		fmt.Println(tools.ColoredStr("Server is running in dev environment").Red())
 		router.Run("localhost:8080")
