@@ -31,7 +31,7 @@ func ConnectDB(env string) *sql.DB {
 
 	defer func() {
 		if db != nil {
-			if err := recover; err != nil {
+			if err := recover(); err != nil {
 				db.Close()
 				panic(err)
 			}
