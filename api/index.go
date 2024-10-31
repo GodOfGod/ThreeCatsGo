@@ -10,6 +10,7 @@ import (
 
 	"ThreeCatsGo/config"
 	DB "ThreeCatsGo/database"
+	globalvar "ThreeCatsGo/global_var"
 	"ThreeCatsGo/model"
 	"ThreeCatsGo/tools"
 
@@ -160,7 +161,7 @@ func ApiAddPet(db *sql.DB) func(ctx *gin.Context) {
 
 		petId := tools.GenerateId().String()
 		// construct petinfo
-		petAvatarResource := "http://localhost:8080/" + config.AVATAR_IMG_SOURCE + "/" + avatarImg.Filename
+		petAvatarResource := globalvar.GetHost() + config.AVATAR_IMG_SOURCE + "/" + avatarImg.Filename
 		petInfo := DB.PetInfo{Pet_id: petId, Nick_name: nickName, Gender: gender, Birthday: birthday, Avatar_path: petAvatarResource}
 
 		// save in mysql pets
@@ -209,7 +210,7 @@ func ApiAddEventImg(db *sql.DB) func(ctx *gin.Context) {
 		img, _ := ctx.FormFile("event_img")
 		saveImgPath := config.EVENT_IMG_FOLDER + "/" + img.Filename
 		ctx.SaveUploadedFile(img, saveImgPath)
-		imgPath := "http://localhost:8080/" + config.EVENT_IMG_SOURCE + "/" + img.Filename
+		imgPath := globalvar.GetHost() + config.EVENT_IMG_SOURCE + "/" + img.Filename
 		ctx.JSON(http.StatusOK, gin.H{"message": "ok", "data": imgPath})
 	}
 }

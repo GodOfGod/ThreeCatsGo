@@ -11,12 +11,14 @@ import (
 	dbCon "ThreeCatsGo/database"
 
 	flag "github.com/spf13/pflag"
+
+	globalvar "ThreeCatsGo/global_var"
 )
 
 func main() {
 	var env *string = flag.String("env", "dev", "current env, dev or prod")
 	flag.Parse()
-
+	globalvar.SetEnv(*env)
 	router := gin.Default()
 
 	router.Use(middleware.VerifyToken())
