@@ -23,15 +23,18 @@ func ConnectDB(env string) *sql.DB {
 	if env == "dev" {
 		db, err = sql.Open("mysql", "root:admin2004@(localhost:3306)/THREE_CATS")
 	} else if env == "prod" {
-		db, err = sql.Open("mysql", "root:0604064Li;@(172.16.2.91:3306)/THREE_CATS")
+		db, err = sql.Open("mysql", "root:0604064Li;@(localhost:3306)/THREE_CATS")
 	}
 	if err != nil {
 		panic(err)
 	}
 
 	defer func() {
-		if err := recover(); err != nil && db != nil {
-			db.Close()
+		if db != nil {
+			if err := recover; err != nil {
+				db.Close()
+				panic(err)
+			}
 		}
 	}()
 
