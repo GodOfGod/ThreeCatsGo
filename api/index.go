@@ -45,11 +45,7 @@ func getEventList(ctx *gin.Context) {
 }
 
 func getUserInfo(db *sql.DB, id string) DB.UserInfo {
-	var user DB.UserInfo
-	err := (*DB.UserInfo).SelectUserById(&user, db, id)
-	if err != nil {
-		panic(err)
-	}
+	user := DB.SelectUserById(db, id)
 	return user
 }
 

@@ -8,14 +8,13 @@ import (
 )
 
 type UserInfo struct {
-	Id string `json:"id"`
-	Username string `json:"username"`
+	Id          string `json:"id"`
+	Username    string `json:"username"`
 	Create_time string `json:"create_time"`
 	Avatar_path string `json:"avatar_path"`
-	Pets_id string `json:"pets_id"`
-	Event_id string  `json:"event_id"`
-} 
-
+	Pets_id     string `json:"pets_id"`
+	Event_id    string `json:"event_id"`
+}
 
 func (user UserInfo) InsertUser(db *sql.DB) int64 {
 	result, err := db.Exec(INSERT_USER, user.Id, user.Username, user.Create_time, user.Avatar_path, user.Pets_id, user.Event_id)
@@ -24,7 +23,7 @@ func (user UserInfo) InsertUser(db *sql.DB) int64 {
 		fmt.Println(err)
 		panic(tools.ColoredStr("Insert user failed").Red())
 	}
-	
+
 	userId, err := result.LastInsertId()
 	if err != nil {
 		fmt.Println(err)
@@ -34,20 +33,20 @@ func (user UserInfo) InsertUser(db *sql.DB) int64 {
 	return userId
 }
 
-func (user *UserInfo) SelectUserById(db *sql.DB, uid string) error{
-	
+func SelectUserById(db *sql.DB, uid string) UserInfo {
+
 	row := db.QueryRow(SELECT_USER_ID, uid)
+	var user UserInfo
 	err := row.Scan(&user.Id, &user.Username, &user.Create_time, &user.Avatar_path, &user.Pets_id, &user.Event_id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil
+			return user
 		}
 		fmt.Println(tools.ColoredStr("SelectUserById failed").Red())
 	}
-	return err
-
+	return user
 }
-func (user UserInfo) UpdatePets (db *sql.DB, uid string, petId string, opt string ) {
+func (user UserInfo) UpdatePets(db *sql.DB, uid string, petId string, opt string) {
 	if opt == "Add" {
 		res, err := db.Exec(UPDATE_USER_PETS, petId, petId, uid)
 		if err != nil {
@@ -60,4 +59,3 @@ func (user UserInfo) UpdatePets (db *sql.DB, uid string, petId string, opt strin
 
 	}
 }
-
