@@ -333,10 +333,14 @@ func ApiDownloadFileById(db *sql.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		file_id, _ := ctx.GetQuery("file_id")
 		fileList := DB.GetFileById(db, file_id)
-		ctx.Header("Content-Type", "application/octet-stream")
-		ctx.Header("Content-Disposition", "attachment; filename="+fileList[0].FileName)
-		ctx.Header("Content-Transfer-Encoding", "binary")
-		fmt.Println(fileList[0].FilePath)
-		ctx.File(fileList[0].FilePath)
+		if len(fileList) == 1 {
+			ctx.Header("Content-Type", "application/octet-stream")
+			ctx.Header("Content-Disposition", "attachment; filename="+fileList[0].FileName)
+			ctx.Header("Content-Transfer-Encoding", "binary")
+			ctx.File(fileList[0].FilePath)
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "failed"})
+		}
+
 	}
 }

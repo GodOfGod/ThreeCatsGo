@@ -18,5 +18,5 @@ func GetHost() string {
 	if IsProd() {
 		return "https://three-cats.top"
 	}
-	return "http://localhost"
+	return "http://localhost:8080"
 }
