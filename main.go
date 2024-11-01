@@ -34,7 +34,7 @@ func main() {
 		router.Run("localhost:8080")
 	} else if *env == "prod" {
 		fmt.Println(tools.ColoredStr("Server is running in prod environment").Red())
-		router.RunTLS("172.16.2.91:443", "cert.pem", "cert.key")
+		router.RunTLS("172.16.2.91:443", "cert/cert.pem", "cert/cert.key")
 	} else {
 		panic(tools.ColoredStr("wrong env arg, you should assign dev or prod to the flag env").Red())
 	}
