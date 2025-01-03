@@ -13,6 +13,16 @@ func VerifyToken() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		header := ctx.Request.Header
 		path := ctx.Request.URL.Path
+
+		// 跳过鉴权
+		freePath := []string{"/login", "/assets", "/question", "/wen"}
+		for _, p := range freePath {
+			reg := regexp.MustCompile("(.)*" + p + "(.)*")
+			if reg.FindString(path) != "" {
+				return
+			}
+		}
+
 		accessToken := header.Get("Access_token")
 		if accessToken != "" {
 			tokenInfo, err := tools.VerifyToken(accessToken)
@@ -23,15 +33,7 @@ func VerifyToken() gin.HandlerFunc {
 			ctx.Set("userId", tokenInfo.UserId)
 			return
 		}
-		return
-		// 跳过鉴权
-		freePath := []string{"/login", "/assets", "/question", "/wen"}
-		for _, p := range freePath {
-			reg := regexp.MustCompile("(.)*" + p + "(.)*")
-			if reg.FindString(path) != "" {
-				return
-			}
-		}
+
 		ctx.JSON(http.StatusForbidden, gin.H{"message": "authorization failed"})
 		ctx.Abort()
 	}
