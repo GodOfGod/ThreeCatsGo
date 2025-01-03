@@ -35,6 +35,10 @@ func HandleRouter(router *gin.Engine, db *sql.DB) {
 	router.GET("/operate_event", ApiEventOperate(db))
 	router.GET("/get_event_by_range", ApiGetEventByRange(db))
 	router.GET("/download_file_by_id", ApiDownloadFileById(db))
+
+	// questionnaire
+	QuestionnaireRouter(router, db)
+
 }
 
 func getEventListByUserId(ctx *gin.Context) {

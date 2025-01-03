@@ -3,7 +3,11 @@ package globalvar
 var ENV string = "dev"
 
 func SetEnv(env string) {
-	ENV = env
+	if env == "" {
+		ENV = "dev"
+	} else {
+		ENV = env
+	}
 }
 
 func GetEnv() string {

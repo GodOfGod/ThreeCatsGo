@@ -23,8 +23,9 @@ func VerifyToken() gin.HandlerFunc {
 			ctx.Set("userId", tokenInfo.UserId)
 			return
 		}
+		return
 		// 跳过鉴权
-		freePath := []string{"/login", "/assets"}
+		freePath := []string{"/login", "/assets", "/question", "/wen"}
 		for _, p := range freePath {
 			reg := regexp.MustCompile("(.)*" + p + "(.)*")
 			if reg.FindString(path) != "" {

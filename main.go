@@ -24,8 +24,13 @@ func main() {
 	router.Use(middleware.VerifyToken())
 
 	router.Static("/assets", "save_assets")
+	router.Static("/h5", "./static")
 
 	db := dbCon.ConnectDB(*env)
+
+	router.GET("/questionnaire/v1", func(c *gin.Context) {
+		c.File("./static/index.html")
+	})
 
 	api.HandleRouter(router, db)
 
