@@ -20,6 +20,8 @@ func QuestionnaireRouter(router *gin.Engine, db *sql.DB) {
 	router.GET("/question/get_questionnaire_config", ApiGetAllQuestionnaireConfig(db))
 	router.GET("/question/get_questionnaire_config_by_id", ApiGetQuestionnaireConfigById(db))
 	router.POST("/question/create_questionnaire", ApiCreateQuestionnaire(db))
+	router.DELETE("/question/delete_questionnaire_by_id", ApiDeleteQuestionnaireById(db))
+	router.DELETE("/question/delete_questionnaire_config_by_id", ApiDeleteQuestionnaireConfigById(db))
 }
 
 func ApiSubmitQuestionnaire(db *sql.DB) func(ctx *gin.Context) {
@@ -133,5 +135,29 @@ func ApiCreateQuestionnaire(db *sql.DB) func(ctx *gin.Context) {
 		}
 
 		ctx.JSON(http.StatusOK, gin.H{"data": customQuestionnaireFields})
+	}
+}
+
+func ApiDeleteQuestionnaireById(db *sql.DB) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		id, _ := ctx.GetQuery("id")
+		err := DB.DeleteQuestionnaireById(db, id)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "failed"})
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{"message": "ok"})
+	}
+}
+
+func ApiDeleteQuestionnaireConfigById(db *sql.DB) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		id, _ := ctx.GetQuery("config_id")
+		err := DB.DeleteQuestionnaireConfigById(db, id)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "failed"})
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{"message": "ok"})
 	}
 }

@@ -94,3 +94,19 @@ func InsertQuestionnaireConfig(db *sql.DB, config model.CustomConfigFields) erro
 	}
 	return err
 }
+
+func DeleteQuestionnaireById(db *sql.DB, id string) error {
+	_, err := db.Exec("DELETE FROM questionnaire WHERE id =?", id)
+	if err != nil {
+		panic(err)
+	}
+	return err
+}
+
+func DeleteQuestionnaireConfigById(db *sql.DB, id string) error {
+	_, err := db.Exec("DELETE FROM questionnaire_config WHERE id =?", id)
+	if err != nil {
+		panic(err)
+	}
+	return err
+}
