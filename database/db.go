@@ -56,3 +56,9 @@ const CREATE_PETS = `
 		avatar_path text
 	);
 `
+
+const CREATE_QUESTIONNAIRE = `
+	create table questionnaire (id varchar(30) primary key, date varchar(50), config_id varchar(30), questionnaire text);
+`
+
+const CREATE_QUESTIONNAIRE_CONFIG = `create table questionnaire_config (id varchar(30) primary key, config_fields text, title text);`
