@@ -11,7 +11,7 @@ type QuestinonaireItem struct {
 	Field      string   `json:"field"`
 	Title      string   `json:"title"`
 	Required   bool     `json:"required"`
-	InputType  []string `json:"inputType"`
+	InputType  string   `json:"inputType"`
 	NeedRemark bool     `json:"needRemark"`
 	Options    []string `json:"options,omitempty"` // Use omitempty for optional fields
 }

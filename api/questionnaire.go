@@ -1,7 +1,6 @@
 package api
 
 import (
-	"ThreeCatsGo/config"
 	DB "ThreeCatsGo/database"
 	"ThreeCatsGo/model"
 	"ThreeCatsGo/tools"
@@ -22,6 +21,8 @@ func QuestionnaireRouter(router *gin.Engine, db *sql.DB) {
 	router.POST("/question/create_questionnaire", ApiCreateQuestionnaire(db))
 	router.DELETE("/question/delete_questionnaire_by_id", ApiDeleteQuestionnaireById(db))
 	router.DELETE("/question/delete_questionnaire_config_by_id", ApiDeleteQuestionnaireConfigById(db))
+	router.POST("/question/create_new_question", ApiCreateNewQuestionItem(db))
+	router.GET("/question/get_questionnaire_item_list", ApiGetQuestionnaireItemList(db))
 }
 
 func ApiSubmitQuestionnaire(db *sql.DB) func(ctx *gin.Context) {
@@ -77,17 +78,17 @@ func ApiUpdateQuestionnaire(db *sql.DB) func(ctx *gin.Context) {
 func ApiGetAllQuestionnaireConfig(db *sql.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		customConfigList := DB.GetCustomConfigFields(db)
-		questionnaireItems, err := config.ReadDefualteConfigFromJson()
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "failed"})
-			return
-		}
+		// questionnaireItems, err := config.ReadDefualteConfigFromJson()
+		// if err != nil {
+		// 	ctx.JSON(http.StatusInternalServerError, gin.H{"message": "failed"})
+		// 	return
+		// }
 		var questionnaireConfig model.QuestionnaireConfigList
 		questionnaireConfig.CustomConfigList = customConfigList
 		if customConfigList == nil {
 			questionnaireConfig.CustomConfigList = []model.CustomConfigFields{}
 		}
-		questionnaireConfig.QuestionnaireItemList = questionnaireItems
+		// questionnaireConfig.QuestionnaireItemList = questionnaireItems
 
 		ctx.JSON(http.StatusOK, gin.H{"data": questionnaireConfig})
 	}
@@ -101,7 +102,7 @@ func ApiGetQuestionnaireConfigById(db *sql.DB) func(ctx *gin.Context) {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "no data"})
 			return
 		}
-		questinonaireList, err := config.ReadDefualteConfigFromJson()
+		questionnaireItems := DB.GetAllQuestionnaireItems(db)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "failed"})
 			return
@@ -111,7 +112,7 @@ func ApiGetQuestionnaireConfigById(db *sql.DB) func(ctx *gin.Context) {
 		if questionnaireConfig.CustomConfigFields == "" {
 			questionnaireConfig.CustomConfigFields = "[]"
 		}
-		questionnaireConfig.QuestionnaireItemList = questinonaireList
+		questionnaireConfig.QuestionnaireItemList = questionnaireItems
 
 		ctx.JSON(http.StatusOK, gin.H{"data": questionnaireConfig})
 	}
@@ -159,5 +160,26 @@ func ApiDeleteQuestionnaireConfigById(db *sql.DB) func(ctx *gin.Context) {
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{"message": "ok"})
+	}
+}
+
+func ApiCreateNewQuestionItem(db *sql.DB) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		var questionnaireItem model.QuestinonaireItem
+		ctx.ShouldBind(&questionnaireItem)
+		questionnaireItem.Id = tools.GenerateId().String()
+		err := DB.InsertQuestionnaireItem(db, questionnaireItem)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "failed"})
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{"message": "ok"})
+	}
+}
+
+func ApiGetQuestionnaireItemList(db *sql.DB) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		questionnaireItems := DB.GetAllQuestionnaireItems(db)
+		ctx.JSON(http.StatusOK, gin.H{"data": questionnaireItems})
 	}
 }

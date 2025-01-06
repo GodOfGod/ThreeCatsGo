@@ -1,7 +1,5 @@
 package model
 
-import "ThreeCatsGo/config"
-
 type Questionnaire struct {
 	Id            string `json:"id"`
 	Date          string `json:"date"`
@@ -19,7 +17,7 @@ type CustomConfigFields struct {
 // 用户页面，用于渲染问卷列表
 type QuestionnaireConfig struct {
 	// 问卷中的问题项
-	QuestionnaireItemList []config.QuestinonaireItem `json:"questionnaire_item_list"`
+	QuestionnaireItemList []QuestinonaireItem `json:"questionnaire_item_list"`
 	// 当前文件id对应的问卷所需要展示的字段
 	CustomConfigFields string `json:"custom_config_fields"`
 }
@@ -27,7 +25,16 @@ type QuestionnaireConfig struct {
 // 管理页面，返回问卷列表和单独定制的字段列表
 type QuestionnaireConfigList struct {
 	// 问卷中的问题项
-	QuestionnaireItemList []config.QuestinonaireItem `json:"questionnaire_item_list"`
+	// QuestionnaireItemList []config.QuestinonaireItem `json:"questionnaire_item_list"`
 	// 自定义问卷
 	CustomConfigList []CustomConfigFields `json:"custom_config_list"`
+}
+
+// 问卷中的问题项
+type QuestinonaireItem struct {
+	Id        string `json:"id"`
+	Field     string `json:"field"`
+	Title     string `json:"title"`
+	InputType string `json:"input_type"`
+	Options   string `json:"options"`
 }

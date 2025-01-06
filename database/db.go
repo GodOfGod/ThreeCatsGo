@@ -62,3 +62,5 @@ const CREATE_QUESTIONNAIRE = `
 `
 
 const CREATE_QUESTIONNAIRE_CONFIG = `create table questionnaire_config (id varchar(30) primary key, config_fields text, title text);`
+
+const CREATE_QUESTION_ITEM = `create table question_item (id varchar(30) primary key, field varchar(50), title text, input_type varchar(20), options text);`

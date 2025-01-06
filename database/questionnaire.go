@@ -3,6 +3,7 @@ package database
 import (
 	model "ThreeCatsGo/model"
 	"database/sql"
+	"fmt"
 )
 
 const INSERT_QUESTIONNAIRE = "INSERT INTO questionnaire (id, date, config_id, questionnaire) VALUES (?, ?, ?, ?)"
@@ -109,4 +110,32 @@ func DeleteQuestionnaireConfigById(db *sql.DB, id string) error {
 		panic(err)
 	}
 	return err
+}
+
+func InsertQuestionnaireItem(db *sql.DB, questionnaireItem model.QuestinonaireItem) error {
+	fmt.Println(questionnaireItem)
+	_, err := db.Exec("INSERT INTO question_item (id, field, title, input_type, options) VALUES (?,?,?,?,?)", questionnaireItem.Id, questionnaireItem.Field, questionnaireItem.Title, questionnaireItem.InputType, questionnaireItem.Options)
+	if err != nil {
+		panic(err)
+	}
+	return err
+}
+
+func GetAllQuestionnaireItems(db *sql.DB) []model.QuestinonaireItem {
+	rows, err := db.Query("SELECT * FROM question_item")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	var questionnaireItems []model.QuestinonaireItem
+	for rows.Next() {
+		var questionnaireItem model.QuestinonaireItem
+		err := rows.Scan(&questionnaireItem.Id, &questionnaireItem.Field, &questionnaireItem.Title, &questionnaireItem.InputType, &questionnaireItem.Options)
+		if err != nil {
+			panic(err)
+		}
+		questionnaireItems = append(questionnaireItems, questionnaireItem)
+	}
+	return questionnaireItems
 }
