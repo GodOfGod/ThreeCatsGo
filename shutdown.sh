@@ -6,7 +6,7 @@ PID=$(ps aux | grep 'go run main.go --env=prod' | grep -v grep | awk '{print $2}
 # 检查是否找到了进程
 if [ -z "$PID" ]; then
     echo "没有找到运行中的进程."
-    PID=$(ps aux | grep '--env=prod' | grep -v grep | awk '{print $2}')
+    PID=$(ps aux | grep 'env=prod' | grep -v grep | awk '{print $2}')
 fi
 
 # 再次检查是否找到了进程
