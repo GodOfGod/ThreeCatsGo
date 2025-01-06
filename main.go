@@ -24,6 +24,7 @@ func main() {
 	router.Use(middleware.VerifyToken())
 
 	router.Static("/assets", "save_assets")
+	router.Static("/favicon.ico", "./static/favicon.ico")
 	router.Static("/h5", "./static")
 
 	db := dbCon.ConnectDB(*env)
