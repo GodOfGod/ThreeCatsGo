@@ -15,7 +15,7 @@ func VerifyToken() gin.HandlerFunc {
 		path := ctx.Request.URL.Path
 
 		// 跳过鉴权
-		freePath := []string{"/login", "/assets", "/question", "/wen"}
+		freePath := []string{"/login", "/assets", "/question", "/h5/favicon.ico"}
 		for _, p := range freePath {
 			reg := regexp.MustCompile("(.)*" + p + "(.)*")
 			if reg.FindString(path) != "" {
