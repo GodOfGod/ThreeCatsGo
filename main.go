@@ -25,7 +25,7 @@ func main() {
 	staticDir := "./static"
 	// 添加中间件处理 .gz 文件
 	router.Use(middleware.GzipServer(staticDir))
-	router.Static("/h5", staticDir)
+	router.StaticFS("/h5", gin.Dir(staticDir, true))
 
 	router.Use(middleware.VerifyToken())
 	router.Static("/assets", "save_assets")
