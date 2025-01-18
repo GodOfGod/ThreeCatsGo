@@ -21,11 +21,15 @@ func main() {
 	globalvar.SetEnv(*env)
 	router := gin.Default()
 
-	router.Use(middleware.VerifyToken())
+	// 静态资源目录前缀为 /h5，资源存储在 ./static
+	staticDir := "./static"
+	// 添加中间件处理 .gz 文件
+	router.Use(middleware.GzipServer(staticDir))
+	router.Static("/h5", staticDir)
 
+	router.Use(middleware.VerifyToken())
 	router.Static("/assets", "save_assets")
 	router.Static("/favicon.ico", "./static/favicon.ico")
-	router.Static("/h5", "./static")
 
 	db := dbCon.ConnectDB(*env)
 
